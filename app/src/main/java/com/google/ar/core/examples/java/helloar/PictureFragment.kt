@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.google.ar.core.examples.java.helloar.placeholder.PlaceholderContent
 
 /**
  * A fragment representing a list of Items.
  */
-class PictureFragment : Fragment() {
+class PictureFragment : Fragment(), MyPictureRecyclerViewAdapter.OnItemClickListener {
 
     private var columnCount = 2
 
@@ -38,7 +39,7 @@ class PictureFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MyPictureRecyclerViewAdapter(PlaceholderContent.ITEMS)
+                adapter = MyPictureRecyclerViewAdapter(PlaceholderContent.ITEMS,this@PictureFragment)
             }
         }
         return view
@@ -57,5 +58,10 @@ class PictureFragment : Fragment() {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }
             }
+    }
+
+    override fun onItemClick(position: Int) {
+        Toast.makeText(context, "Item $position clicked", Toast.LENGTH_SHORT).show()
+
     }
 }

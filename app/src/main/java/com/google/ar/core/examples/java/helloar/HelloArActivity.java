@@ -18,6 +18,7 @@ package com.google.ar.core.examples.java.helloar;
 
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;

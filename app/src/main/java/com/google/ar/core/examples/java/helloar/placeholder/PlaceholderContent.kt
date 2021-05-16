@@ -34,11 +34,13 @@ object PlaceholderContent {
 
     private fun addItem(item: PlaceholderItem) {
         ITEMS.add(item)
+
         ITEM_MAP.put(item.id, item)
     }
 
     private fun createPlaceholderItem(position: Int): PlaceholderItem {
-        return PlaceholderItem(position.toString(), "Item " + position, makeDetails(position), R.drawable.daisy)
+        return PlaceholderItem(position.toString(), "Item " + position, makeDetails(position), R.drawable.daisy,
+            99.9,"https://images.unsplash.com/photo-1583089892943-e02e5b017b6a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80")
     }
 
     private fun makeDetails(position: Int): String {
@@ -54,7 +56,7 @@ object PlaceholderContent {
      * A placeholder item representing a piece of content.
      */
     data class PlaceholderItem(val id: String, val content: String, val details: String,@DrawableRes
-    val image: Int?) {
+    val image: Int?, val price: Number, val imgURL:String) {
         override fun toString(): String = content
     }
 }
