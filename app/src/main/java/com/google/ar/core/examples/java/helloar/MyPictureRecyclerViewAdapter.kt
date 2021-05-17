@@ -39,7 +39,7 @@ class MyPictureRecyclerViewAdapter(
             holder.idView.load(item.imgURL){
                 crossfade(true)
                 crossfade(2000)
-                placeholder(item.image)
+                placeholder(R.drawable.ic_placeholder)
                 error(R.drawable.ic_error)
             }
             //holder.idView.setImageResource(item.image)
