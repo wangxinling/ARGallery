@@ -31,10 +31,17 @@
     </string-array>
     <string name="title_activity_home">MainActivity</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_dashboard">Cart</string>
+    <string name="title_notifications">Account</string>
     <string name="title_ar">AR</string>
     <string name="edit_message">Search</string>
     <string name="button_send">filter</string>
 
+    <string-array name="quantity_string_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5(Max)</item>
+    </string-array>
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailFragment">
+    tools:context=".ui.home.DetailFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,13 +16,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:src="@drawable/ic_placeholder" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+        <TextView
+            android:id="@+id/productNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="4dp" />
+
+        <TextView
+            android:id="@+id/priceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
         <TextView
             android:id="@+id/detail_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:text="Detail Text" />
 
         <Button
@@ -30,7 +57,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:layout_gravity="center"
+            android:text="AddCart" />
 
 
     </LinearLayout>

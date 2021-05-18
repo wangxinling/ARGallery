@@ -2,6 +2,7 @@ package com.google.ar.core.examples.java.helloar.placeholder
 
 import androidx.annotation.DrawableRes
 import com.google.ar.core.examples.java.helloar.R
+import com.google.ar.core.examples.java.helloar.ui.cart.CartItem
 import java.util.ArrayList
 import java.util.HashMap
 
@@ -9,7 +10,6 @@ import java.util.HashMap
  * Helper class for providing sample content for user interfaces created by
  * Android template wizards.
  *
- * TODO: Replace all uses of this class before publishing your app.
  */
 object PlaceholderContent {
 

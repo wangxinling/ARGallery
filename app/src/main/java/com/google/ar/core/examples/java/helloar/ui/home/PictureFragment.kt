@@ -1,4 +1,4 @@
-package com.google.ar.core.examples.java.helloar
+package com.google.ar.core.examples.java.helloar.ui.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.google.ar.core.examples.java.helloar.R
 import com.google.ar.core.examples.java.helloar.placeholder.PlaceholderContent
-import com.google.ar.core.examples.java.helloar.ui.home.HomeFragmentDirections
 
 /**
  * A fragment representing a list of Items.
@@ -63,7 +63,7 @@ class PictureFragment : Fragment(), MyPictureRecyclerViewAdapter.OnItemClickList
     }
 
     override fun onItemClick(position: Int) {
-        Toast.makeText(context, "Item $position clicked", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(context, "Item $position clicked", Toast.LENGTH_SHORT).show()
         val action = HomeFragmentDirections.actionNavigationHomeToNavigationDetail(position)
         findNavController().navigate(action)
 

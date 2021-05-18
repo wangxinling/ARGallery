@@ -1,4 +1,4 @@
-package com.google.ar.core.examples.java.helloar
+package com.google.ar.core.examples.java.helloar.ui.home
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import coil.load
+import com.google.ar.core.examples.java.helloar.R
 
 import com.google.ar.core.examples.java.helloar.placeholder.PlaceholderContent.PlaceholderItem
 import com.google.ar.core.examples.java.helloar.databinding.FragmentItemBinding
@@ -42,7 +43,6 @@ class MyPictureRecyclerViewAdapter(
                 placeholder(R.drawable.ic_placeholder)
                 error(R.drawable.ic_error)
             }
-            //holder.idView.setImageResource(item.image)
 
         }
         holder.contentView.text = item.content

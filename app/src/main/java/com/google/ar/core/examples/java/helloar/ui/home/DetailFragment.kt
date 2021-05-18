@@ -1,4 +1,4 @@
-package com.google.ar.core.examples.java.helloar
+package com.google.ar.core.examples.java.helloar.ui.home
 
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
@@ -12,15 +12,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import coil.load
+import com.google.ar.core.examples.java.helloar.HomeActivity
+import com.google.ar.core.examples.java.helloar.R
 import com.google.ar.core.examples.java.helloar.placeholder.PlaceholderContent
+import com.google.ar.core.examples.java.helloar.ui.cart.CartViewModel
+import kotlinx.android.synthetic.main.detail_fragment.*
 
 class DetailFragment : Fragment() {
     val args: DetailFragmentArgs by navArgs()
+    private lateinit var cartViewModel: CartViewModel
     companion object {
         fun newInstance() = DetailFragment()
     }
-
-    private lateinit var viewModel: DetailViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,21 +34,22 @@ class DetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
 
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        cartViewModel = ViewModelProvider(requireActivity()).get(CartViewModel::class.java)
 
 
         val data = PlaceholderContent.ITEMS.get(args.itemIndex)
         view.findViewById<TextView>(R.id.detail_text).text = data.details
         view.findViewById<ImageView>(R.id.detail_imageView).load(data.imgURL)
-    }
-    fun jumpBack(view:View){
-        Toast.makeText(context,"test",Toast.LENGTH_SHORT).show()
-        val intent: Intent = Intent(this.context, HomeActivity::class.java)
-        startActivity(intent)
+        productNameTextView.text = data.content
+        priceTextView.text = data.price.toString() + "$"
+        button.setOnClickListener {
+            cartViewModel.addItemToCart(data)
+        }
+
     }
 
 }

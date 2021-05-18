@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context=".PictureFragment"
+    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+    app:spanCount="2"
+    tools:context=".ui.home.PictureFragment"
     tools:listitem="@layout/fragment_item" />

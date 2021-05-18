@@ -35,7 +35,7 @@
         android:layout_height="wrap_content">
         <fragment
             android:id="@+id/picture_list"
-            android:name="com.google.ar.core.examples.java.helloar.PictureFragment"
+            android:name="com.google.ar.core.examples.java.helloar.ui.home.PictureFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
