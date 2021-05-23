@@ -167,6 +167,50 @@ public class Texture implements Closeable {
     }
     return texture;
   }
+  public static Texture createFromBitmap(
+          SampleRender render, Bitmap netBitmap, WrapMode wrapMode, ColorFormat colorFormat)
+          throws IOException {
+    Texture texture = new Texture(render, Target.TEXTURE_2D, wrapMode);
+    Bitmap bitmap = null;
+    try {
+      // The following lines up to glTexImage2D could technically be replaced with
+      // GLUtils.texImage2d, but this method does not allow for loading sRGB images.
+
+      // Load and convert the bitmap and copy its contents to a direct ByteBuffer. Despite its name,
+      // the ARGB_8888 config is actually stored in RGBA order.
+      bitmap =
+              convertBitmapToConfig(
+                      netBitmap,
+                      Bitmap.Config.ARGB_8888);
+      ByteBuffer buffer = ByteBuffer.allocateDirect(bitmap.getByteCount());
+      bitmap.copyPixelsToBuffer(buffer);
+      buffer.rewind();
+
+      GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texture.getTextureId());
+      GLError.maybeThrowGLException("Failed to bind texture", "glBindTexture");
+      GLES30.glTexImage2D(
+              GLES30.GL_TEXTURE_2D,
+              /*level=*/ 0,
+              colorFormat.glesEnum,
+              bitmap.getWidth(),
+              bitmap.getHeight(),
+              /*border=*/ 0,
+              GLES30.GL_RGBA,
+              GLES30.GL_UNSIGNED_BYTE,
+              buffer);
+      GLError.maybeThrowGLException("Failed to populate texture data", "glTexImage2D");
+      GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
+      GLError.maybeThrowGLException("Failed to generate mipmaps", "glGenerateMipmap");
+    } catch (Throwable t) {
+      texture.close();
+      throw t;
+    } finally {
+      if (bitmap != null) {
+        bitmap.recycle();
+      }
+    }
+    return texture;
+  }
 
   @Override
   public void close() {

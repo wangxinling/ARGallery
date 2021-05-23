@@ -14,6 +14,7 @@
    limitations under the License.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -34,5 +35,84 @@
       android:layout_margin="25dp"
       android:src="@drawable/ic_settings"
       android:background="@android:color/transparent"/>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="300dp"
+      android:layout_alignParentBottom="true">
+
+
+    <ImageButton
+        android:id="@+id/downBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="234dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="23dp"
+        app:srcCompat="@drawable/ic_baseline_arrow_circle_down_24" />
+
+    <ImageButton
+        android:id="@+id/rightBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="133dp"
+        android:layout_marginTop="192dp"
+        android:layout_marginBottom="65dp"
+        app:srcCompat="@drawable/ic_baseline_arrow_right_24" />
+
+    <ImageButton
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="71dp"
+        android:layout_marginTop="234dp"
+        android:layout_marginBottom="23dp"
+        app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24" />
+
+    <ImageButton
+        android:id="@+id/forwardBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="71dp"
+        android:layout_marginTop="154dp"
+        android:layout_marginBottom="103dp"
+        app:srcCompat="@drawable/ic_baseline_arrow_drop_up_24" />
+
+    <ImageButton
+        android:id="@+id/leftBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="195dp"
+        android:layout_marginBottom="62dp"
+        app:srcCompat="@drawable/ic_baseline_arrow_left_24" />
+
+    <ImageButton
+        android:id="@+id/upBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="169dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="88dp"
+        app:srcCompat="@drawable/ic_baseline_arrow_circle_up_24" />
+  </RelativeLayout>
 
 </RelativeLayout>

@@ -1,6 +1,8 @@
 package com.google.ar.core.examples.java.helloar.ui.home
 
-import android.content.Intent
+
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,14 +11,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import coil.ImageLoader
 import coil.load
-import com.google.ar.core.examples.java.helloar.HomeActivity
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.google.ar.core.examples.java.helloar.R
 import com.google.ar.core.examples.java.helloar.placeholder.PlaceholderContent
 import com.google.ar.core.examples.java.helloar.ui.cart.CartViewModel
 import kotlinx.android.synthetic.main.detail_fragment.*
+import kotlinx.coroutines.launch
 
 class DetailFragment : Fragment() {
     val args: DetailFragmentArgs by navArgs()
@@ -29,7 +35,17 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.detail_fragment, container, false)
+    }
+    private suspend fun getBitmap(url:String): Bitmap {
+        val loading = ImageLoader(requireContext())
+        val request = ImageRequest.Builder(requireContext())
+                .data(url)
+                .build()
+        val result = (loading.execute(request) as SuccessResult).drawable
+
+        return (result as BitmapDrawable).bitmap
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -48,6 +64,11 @@ class DetailFragment : Fragment() {
         priceTextView.text = data.price.toString() + "$"
         button.setOnClickListener {
             cartViewModel.addItemToCart(data)
+            //Load image to Bitmap
+            lifecycleScope.launch{
+                val bitmapData = getBitmap(data.imgURL)
+                PlaceholderContent.setImageBitmap(bitmapData)
+            }
         }
 
     }

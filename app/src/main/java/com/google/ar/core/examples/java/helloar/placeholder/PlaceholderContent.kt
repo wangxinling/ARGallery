@@ -1,5 +1,6 @@
 package com.google.ar.core.examples.java.helloar.placeholder
 
+import android.graphics.Bitmap
 import androidx.annotation.DrawableRes
 import com.google.ar.core.examples.java.helloar.R
 import com.google.ar.core.examples.java.helloar.ui.cart.CartItem
@@ -24,6 +25,8 @@ object PlaceholderContent {
     val ITEM_MAP: MutableMap<String, PlaceholderItem> = HashMap()
 
     private val COUNT = 25
+
+    private lateinit var bitmap:Bitmap
 
     init {
         // Add some sample items.
@@ -50,6 +53,14 @@ object PlaceholderContent {
             builder.append("\nMore details information here.")
         }
         return builder.toString()
+    }
+    fun getImageBitmap(): Bitmap
+    {
+        return bitmap
+    }
+    fun setImageBitmap(data:Bitmap)
+    {
+        bitmap = data
     }
 
     /**

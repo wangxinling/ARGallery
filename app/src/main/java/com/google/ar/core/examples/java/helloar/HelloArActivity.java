@@ -68,6 +68,7 @@ import com.google.ar.core.examples.java.common.samplerender.VertexBuffer;
 import com.google.ar.core.examples.java.common.samplerender.arcore.BackgroundRenderer;
 import com.google.ar.core.examples.java.common.samplerender.arcore.PlaneRenderer;
 import com.google.ar.core.examples.java.common.samplerender.arcore.SpecularCubemapFilter;
+import com.google.ar.core.examples.java.helloar.placeholder.PlaceholderContent;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.core.exceptions.NotYetAvailableException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
@@ -173,6 +174,10 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
   private final float[] worldLightDirection = {0.0f, 0.0f, 0.0f, 0.0f};
   private final float[] viewLightDirection = new float[4]; // view x world light direction
 
+  //Bitmap from Cart
+
+  private Bitmap cartBitmap = null;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -202,6 +207,10 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
             popup.show();
           }
         });
+
+    // find bitmap from Intent
+    cartBitmap = PlaceholderContent.INSTANCE.getImageBitmap();
+
   }
 
   /** Menu button to launch feature specific settings. */
@@ -394,19 +403,25 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
               render, Mesh.PrimitiveMode.POINTS, /*indexBuffer=*/ null, pointCloudVertexBuffers);
 
       // Virtual object to render (ARCore pawn)
-      Texture virtualObjectAlbedoTexture =
-          Texture.createFromAsset(
-              render,
-              "models/pawn_albedo.png",
-              Texture.WrapMode.CLAMP_TO_EDGE,
-              Texture.ColorFormat.SRGB);
       Texture virtualObjectPbrTexture =
           Texture.createFromAsset(
               render,
-              "models/pawn_roughness_metallic_ao.png",
+              "models/white.png",
               Texture.WrapMode.CLAMP_TO_EDGE,
-              Texture.ColorFormat.LINEAR);
-      virtualObjectMesh = Mesh.createFromAsset(render, "models/pawn.obj");
+              Texture.ColorFormat.SRGB);
+//      Texture virtualObjectAlbedoTexture =
+//          Texture.createFromBitmap(
+//              render, cartBitmap,
+//              Texture.WrapMode.CLAMP_TO_EDGE,
+//              Texture.ColorFormat.SRGB);
+
+      Texture virtualObjectAlbedoTexture =
+
+          Texture.createFromBitmap(
+              render, cartBitmap,
+              Texture.WrapMode.CLAMP_TO_EDGE,
+              Texture.ColorFormat.SRGB);
+      virtualObjectMesh = Mesh.createFromAsset(render, "models/album.obj");
       virtualObjectShader =
           Shader.createFromAssets(
                   render,
@@ -616,7 +631,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
             || (trackable instanceof InstantPlacementPoint)) {
           // Cap the number of objects created. This avoids overloading both the
           // rendering system and ARCore.
-          if (anchors.size() >= 20) {
+          if (anchors.size() >= 1) {
             anchors.get(0).detach();
             anchors.remove(0);
           }
