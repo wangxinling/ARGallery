@@ -13,7 +13,7 @@ import com.google.ar.core.examples.java.helloar.placeholder.PlaceholderContent
 import kotlinx.android.synthetic.main.fragment_cart.*
 import java.util.ArrayList
 
-class CartFragment : Fragment() {
+class CartFragment : Fragment(), CartListAdapter.OnItemClickListener {
 
     private lateinit var cartViewModel: CartViewModel
 
@@ -25,8 +25,6 @@ class CartFragment : Fragment() {
         cartViewModel = ViewModelProvider(requireActivity()).get(CartViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_cart, container, false)
 
-        // Set the adapter
-
 
         return root
     }
@@ -35,16 +33,23 @@ class CartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         var cartAdapter = if (cartViewModel.cartListLive.value == null) {
-            CartListAdapter( ArrayList<CartItem>())
+            CartListAdapter( ArrayList<CartItem>(),this)
         } else {
-            CartListAdapter(cartViewModel.cartListLive.value!!)
+            CartListAdapter(cartViewModel.cartListLive.value!!,this)
         }
 
         cartRecyclerView.hasFixedSize()
         cartRecyclerView.adapter = cartAdapter
-
         cartViewModel.cartListLive.observe(viewLifecycleOwner, Observer {
             cartAdapter.update(it)
         })
+        cartViewModel.totalPrice.observe(viewLifecycleOwner, Observer {
+            orderTotalTextView.text = "Total: $"+it.toString()
+        })
     }
+
+    override fun onItemClick(item: CartItem) {
+        cartViewModel.removeItemFromCart(item)
+    }
+
 }
