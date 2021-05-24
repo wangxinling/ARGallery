@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.ar.core.examples.java.helloar.HomeActivity
@@ -19,6 +20,7 @@ class LoginFragment : Fragment() {
     private lateinit var btnForgot: Button
     private lateinit var btnSignUp: Button
     private lateinit var navController: NavController
+    private lateinit var personViewModel: PersonViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_login, container, false)
@@ -26,15 +28,17 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        personViewModel = ViewModelProvider(requireActivity()).get(PersonViewModel::class.java)
         navController = Navigation.findNavController(
             requireActivity(),
             R.id.nav_host_fragment
         )
         btnLogin = view.findViewById(R.id.mBtnLogin)
         btnLogin.setOnClickListener {
-            startActivity(Intent(activity, HomeActivity::class.java))
-            requireActivity().finish()
+            personViewModel.isLogin.value = true
+
+            navController.navigate(R.id.navigation_home)
+
         }
         btnForgot = view.findViewById(R.id.mBtnForgot)
         btnForgot.setOnClickListener {

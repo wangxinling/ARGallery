@@ -1,18 +1,16 @@
 package com.google.ar.core.examples.java.helloar.ui.home
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import coil.load
-import coil.transform.CircleCropTransformation
-import coil.transform.GrayscaleTransformation
+
 import com.google.ar.core.examples.java.helloar.R
+import com.google.ar.core.examples.java.helloar.placeholder.PlaceholderContent
 
 class HomeFragment : Fragment() {
 
@@ -23,6 +21,9 @@ class HomeFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?,
     ): View? {
+        val bitmapData = BitmapFactory.decodeResource(resources,R.drawable.daisy)
+        PlaceholderContent.setImageBitmap(bitmapData)
+
         homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
 
@@ -32,4 +33,5 @@ class HomeFragment : Fragment() {
         })
         return root
     }
+
 }

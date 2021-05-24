@@ -24,26 +24,30 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_navigation_detail_to_navigation_dashboard"
-            app:destination="@id/navigation_dashboard" />
+            app:destination="@id/navigation_cart" />
 
     </fragment>
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_cart"
         android:name="com.google.ar.core.examples.java.helloar.ui.cart.CartFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_cart" />
+        tools:layout="@layout/fragment_cart" >
+        <action
+            android:id="@+id/action_navigation_cart_to_orderFragment"
+            app:destination="@id/navigation_orderFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_login"
         android:name="com.google.ar.core.examples.java.helloar.ui.person.LoginFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_forgotFragment"
-            app:destination="@id/forgotFragment"/>
+            app:destination="@id/navigation_forgotFragment"/>
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
-            app:destination="@id/signupFragment"/>
+            app:destination="@id/navigation_signupFragment"/>
     </fragment>
     <activity
         android:id="@+id/navigation_ar"
@@ -52,17 +56,42 @@
         tools:layout="@layout/activity_main" />
 
 
-    <fragment android:id="@+id/forgotFragment"
+    <fragment android:id="@+id/navigation_forgotFragment"
         android:name="com.google.ar.core.examples.java.helloar.ui.person.ForgotFragment"
-        android:label="ForgotFragment"
+        android:label="Forgot"
         tools:layout="@layout/fragment_forgot">
         <argument
             android:name="email"
             app:argType="string"/>
     </fragment>
 
-    <fragment android:id="@+id/signupFragment"
+    <fragment android:id="@+id/navigation_signupFragment"
         android:name="com.google.ar.core.examples.java.helloar.ui.person.SignupFragment"
-        android:label="SignupFragment"
+        android:label="Signup"
         tools:layout="@layout/fragment_signup"/>
+    <fragment
+        android:id="@+id/navigation_personFragment"
+        android:name="com.google.ar.core.examples.java.helloar.ui.person.PersonFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_person" />
+    <fragment
+        android:id="@+id/navigation_orderFragment"
+        android:name="com.google.ar.core.examples.java.helloar.ui.cart.OrderFragment"
+        android:label="Order"
+        tools:layout="@layout/fragment_order" />
+    <fragment
+        android:id="@+id/navigation_accountFragment"
+        android:name="com.google.ar.core.examples.java.helloar.ui.person.AccountFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_accountFragment_to_navigation_login"
+            app:destination="@id/navigation_login" />
+        <action
+            android:id="@+id/action_accountFragment_to_personFragment"
+            app:destination="@id/navigation_personFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_orderFragment"
+            app:destination="@id/navigation_orderFragment" />
+    </fragment>
 </navigation>

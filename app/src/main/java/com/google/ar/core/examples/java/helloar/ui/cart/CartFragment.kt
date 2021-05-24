@@ -8,8 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.ar.core.examples.java.helloar.R
+import com.google.ar.core.examples.java.helloar.placeholder.PlaceholderContent
+import com.google.ar.core.examples.java.helloar.ui.home.DetailFragmentDirections
+
 import kotlinx.android.synthetic.main.fragment_cart.*
+import kotlinx.coroutines.launch
 import java.util.ArrayList
 
 class CartFragment : Fragment(), CartListAdapter.OnItemClickListener {
@@ -45,6 +51,13 @@ class CartFragment : Fragment(), CartListAdapter.OnItemClickListener {
         cartViewModel.totalPrice.observe(viewLifecycleOwner, Observer {
             orderTotalTextView.text = "Total: $"+it.toString()
         })
+
+        placeOrderButton.setOnClickListener {
+
+            val action = CartFragmentDirections.actionNavigationCartToOrderFragment()
+            findNavController().navigate(action)
+
+        }
     }
 
     override fun onItemClick(item: CartItem) {

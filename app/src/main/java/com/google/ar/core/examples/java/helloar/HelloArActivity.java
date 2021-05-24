@@ -167,6 +167,8 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
   private final float[] modelMatrix = new float[16];
   private final float[] viewMatrix = new float[16];
   private final float[] projectionMatrix = new float[16];
+  private final float[] modelOffsetMatrix = new float[16];
+  private final float[] modelOffsetViewMatrix = new float[16];
   private final float[] modelViewMatrix = new float[16]; // view x model
   private final float[] modelViewProjectionMatrix = new float[16]; // projection x view x model
   private final float[] sphericalHarmonicsCoefficients = new float[9 * 3];
@@ -181,6 +183,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     setContentView(R.layout.activity_main);
     surfaceView = findViewById(R.id.surfaceview);
     displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
@@ -210,6 +213,68 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 
     // find bitmap from Intent
     cartBitmap = PlaceholderContent.INSTANCE.getImageBitmap();
+
+    //set the modelOffsetMatrix to a Identity matrix
+    modelOffsetMatrix[0]=1;
+    modelOffsetMatrix[5]=1;
+    modelOffsetMatrix[10]=1;
+    modelOffsetMatrix[15]=1;
+
+
+    //add listener to each button for item movement
+    ImageButton upBtn = findViewById(R.id.upBtn);
+    upBtn.setOnClickListener( new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Matrix.translateM(modelOffsetMatrix,0,0,0.1F,0);
+
+      }
+    });
+
+    ImageButton downBtn = findViewById(R.id.downBtn);
+    downBtn.setOnClickListener( new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Matrix.translateM(modelOffsetMatrix,0,0,-0.1F,0);
+
+      }
+    });
+
+    ImageButton forwardBtn = findViewById(R.id.forwardBtn);
+    forwardBtn.setOnClickListener( new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Matrix.translateM(modelOffsetMatrix,0,0,0,-0.1F);
+      }
+    });
+
+    ImageButton backBtn = findViewById(R.id.backBtn);
+    backBtn.setOnClickListener( new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Matrix.translateM(modelOffsetMatrix,0,0,0,0.1F);
+
+      }
+    });
+
+    ImageButton leftBtn = findViewById(R.id.leftBtn);
+    leftBtn.setOnClickListener( new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+
+        Matrix.translateM(modelOffsetMatrix,0,-0.1F,0,0);
+      }
+    });
+
+    ImageButton rightBtn = findViewById(R.id.rightBtn);
+    rightBtn.setOnClickListener( new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Matrix.translateM(modelOffsetMatrix,0,0.1F,0,0);
+      }
+    });
+
+
 
   }
 
@@ -450,6 +515,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     virtualSceneFramebuffer.resize(width, height);
   }
 
+
   @Override
   public void onDrawFrame(SampleRender render) {
     if (session == null) {
@@ -593,8 +659,11 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
       // during calls to session.update() as ARCore refines its estimate of the world.
       anchor.getPose().toMatrix(modelMatrix, 0);
 
+      // Multiply the offset Matrix
+      Matrix.multiplyMM(modelOffsetViewMatrix, 0,modelMatrix,0, modelOffsetMatrix,0);
+
       // Calculate model/view/projection matrices
-      Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, modelMatrix, 0);
+      Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, modelOffsetViewMatrix, 0);
       Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0);
 
       // Update shader properties and draw

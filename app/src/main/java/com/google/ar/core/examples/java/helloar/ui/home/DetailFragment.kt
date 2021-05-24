@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.ImageLoader
 import coil.load
@@ -64,6 +65,9 @@ class DetailFragment : Fragment() {
         priceTextView.text = data.price.toString() + "$"
         button.setOnClickListener {
             cartViewModel.addItemToCart(data)
+            //Jump to cart
+            val action = DetailFragmentDirections.actionNavigationDetailToNavigationDashboard()
+            findNavController().navigate(action)
             //Load image to Bitmap
             lifecycleScope.launch{
                 val bitmapData = getBitmap(data.imgURL)

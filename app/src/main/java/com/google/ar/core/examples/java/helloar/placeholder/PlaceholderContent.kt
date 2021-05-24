@@ -1,6 +1,7 @@
 package com.google.ar.core.examples.java.helloar.placeholder
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.annotation.DrawableRes
 import com.google.ar.core.examples.java.helloar.R
 import com.google.ar.core.examples.java.helloar.ui.cart.CartItem
