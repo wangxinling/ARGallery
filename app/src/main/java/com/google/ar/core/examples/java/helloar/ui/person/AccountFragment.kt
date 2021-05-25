@@ -31,6 +31,13 @@ class AccountFragment : Fragment() {
             val action = AccountFragmentDirections.actionAccountFragmentToNavigationLogin()
             findNavController().navigate(action)
         }
+        else
+        {
+            personViewModel.getDummyData()
+            userName.text = personViewModel.personData.firstName + " " + personViewModel.personData.lastName
+            userEmail.text = personViewModel.personData.email
+
+        }
 
     }
 
