@@ -19,6 +19,8 @@ package com.google.ar.core.examples.java.helloar;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
@@ -29,10 +31,16 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
+
+
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.Camera;
@@ -69,6 +77,9 @@ import com.google.ar.core.examples.java.common.samplerender.arcore.BackgroundRen
 import com.google.ar.core.examples.java.common.samplerender.arcore.PlaneRenderer;
 import com.google.ar.core.examples.java.common.samplerender.arcore.SpecularCubemapFilter;
 import com.google.ar.core.examples.java.helloar.placeholder.PlaceholderContent;
+import com.google.ar.core.examples.java.helloar.ui.cart.ARCartListAdapter;
+import com.google.ar.core.examples.java.helloar.ui.cart.CartItem;
+import com.google.ar.core.examples.java.helloar.ui.cart.CartViewModel;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.core.exceptions.NotYetAvailableException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
@@ -76,19 +87,25 @@ import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+
+import kotlin.jvm.internal.markers.KMutableList;
 
 /**
  * This is a simple example that shows how to create an augmented reality (AR) application using the
  * ARCore API. The application will display any detected planes and will allow the user to tap on a
  * plane to place a 3D model.
  */
-public class HelloArActivity extends AppCompatActivity implements SampleRender.Renderer {
+public class HelloArActivity extends AppCompatActivity implements SampleRender.Renderer, ARCartListAdapter.OnItemClickListener  {
 
   private static final String TAG = HelloArActivity.class.getSimpleName();
 
@@ -176,9 +193,16 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
   private final float[] worldLightDirection = {0.0f, 0.0f, 0.0f, 0.0f};
   private final float[] viewLightDirection = new float[4]; // view x world light direction
 
-  //Bitmap from Cart
+  //Bitmap from Cart, we need two instance for changing shader.
 
-  private Bitmap cartBitmap = null;
+  private Bitmap cartBitmapFirst = null;
+  private Bitmap cartBitmapSecond = null;
+  private boolean needUpdateShader = false;
+  private boolean isRenderFirstBmp = true;
+
+  private int currentIndex = -1;
+
+  private CartViewModel cartViewModel;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -212,7 +236,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         });
 
     // find bitmap from Intent
-    cartBitmap = PlaceholderContent.INSTANCE.getImageBitmap();
+    cartBitmapFirst = PlaceholderContent.INSTANCE.getBitmap();
 
     //set the modelOffsetMatrix to a Identity matrix
     modelOffsetMatrix[0]=1;
@@ -275,6 +299,40 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     });
 
 
+  }
+
+  @Override
+  public void onItemClick(int index, @NotNull ImageView item)
+  {
+    if (index == currentIndex)
+    {
+      return;
+    }
+    currentIndex = index;
+    // Copy a new bitmap otherwise it will be in recycled state
+    Bitmap tempBitmap =((BitmapDrawable) item.getDrawable()).getBitmap();
+    if(isRenderFirstBmp)
+    {
+      cartBitmapSecond =tempBitmap.copy(tempBitmap.getConfig(),false);
+    }
+    else
+    {
+      cartBitmapFirst = tempBitmap.copy(tempBitmap.getConfig(),false);
+    }
+    needUpdateShader = true;
+  }
+  @Override
+  protected void onStart() {
+    super.onStart();
+    cartViewModel = new ViewModelProvider(HomeActivity.staticInstance.get()).get(CartViewModel.class);
+    MutableLiveData<List<CartItem>> listLive = cartViewModel.getCartListLive();
+    List<CartItem> list = listLive.getValue();
+    if (list != null)
+    {
+      ARCartListAdapter cartAdapter = new ARCartListAdapter(list,this);
+      RecyclerView cartRecyclerView = findViewById(R.id.cartRecyclerView);
+      cartRecyclerView.setAdapter(cartAdapter);
+    }
 
   }
 
@@ -474,16 +532,12 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
               "models/white.png",
               Texture.WrapMode.CLAMP_TO_EDGE,
               Texture.ColorFormat.SRGB);
-//      Texture virtualObjectAlbedoTexture =
-//          Texture.createFromBitmap(
-//              render, cartBitmap,
-//              Texture.WrapMode.CLAMP_TO_EDGE,
-//              Texture.ColorFormat.SRGB);
+
 
       Texture virtualObjectAlbedoTexture =
 
           Texture.createFromBitmap(
-              render, cartBitmap,
+              render, cartBitmapFirst,
               Texture.WrapMode.CLAMP_TO_EDGE,
               Texture.ColorFormat.SRGB);
       virtualObjectMesh = Mesh.createFromAsset(render, "models/album.obj");
@@ -507,6 +561,47 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
       Log.e(TAG, "Failed to read a required asset file", e);
       messageSnackbarHelper.showError(this, "Failed to read a required asset file: " + e);
     }
+  }
+
+  public void updateObjectShader(SampleRender render, Bitmap newBitmap)
+  {
+    try {
+      Texture virtualObjectPbrTexture =
+              Texture.createFromAsset(
+                      render,
+                      "models/white.png",
+                      Texture.WrapMode.CLAMP_TO_EDGE,
+                      Texture.ColorFormat.SRGB);
+
+      Texture virtualObjectAlbedoTexture =
+
+              Texture.createFromBitmap(
+                      render, newBitmap,
+                      Texture.WrapMode.CLAMP_TO_EDGE,
+                      Texture.ColorFormat.SRGB);
+      virtualObjectMesh = Mesh.createFromAsset(render, "models/album.obj");
+      virtualObjectShader =
+              Shader.createFromAssets(
+                      render,
+                      "shaders/environmental_hdr.vert",
+                      "shaders/environmental_hdr.frag",
+                      /*defines=*/ new HashMap<String, String>() {
+                        {
+                          put(
+                                  "NUMBER_OF_MIPMAP_LEVELS",
+                                  Integer.toString(cubemapFilter.getNumberOfMipmapLevels()));
+                        }
+                      })
+                      .setTexture("u_AlbedoTexture", virtualObjectAlbedoTexture)
+                      .setTexture("u_RoughnessMetallicAmbientOcclusionTexture", virtualObjectPbrTexture)
+                      .setTexture("u_Cubemap", cubemapFilter.getFilteredCubemapTexture())
+                      .setTexture("u_DfgTexture", dfgTexture);
+    }catch (IOException e) {
+      Log.e(TAG, "Failed to read a required asset file", e);
+      messageSnackbarHelper.showError(this, "Failed to read a required asset file: " + e);
+    }
+
+
   }
 
   @Override
@@ -533,6 +628,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 
     // -- Update per-frame state
 
+
     // Notify ARCore session that the view size changed so that the perspective matrix and
     // the video background can be properly adjusted.
     displayRotationHelper.updateSessionIfNeeded(session);
@@ -550,6 +646,21 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     }
     Camera camera = frame.getCamera();
 
+    if (needUpdateShader)
+    {
+      needUpdateShader = false;
+      if (isRenderFirstBmp)
+      {
+        isRenderFirstBmp = false;
+        updateObjectShader(render,cartBitmapSecond);
+      }
+      else
+      {
+        isRenderFirstBmp = true;
+        updateObjectShader(render,cartBitmapFirst);
+      }
+
+    }
     // Update BackgroundRenderer state to match the depth settings.
     try {
       backgroundRenderer.setUseDepthVisualization(
@@ -900,4 +1011,6 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     }
     session.configure(config);
   }
+
+
 }

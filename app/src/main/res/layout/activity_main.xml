@@ -40,7 +40,14 @@
       android:layout_width="match_parent"
       android:layout_height="300dp"
       android:layout_alignParentBottom="true">
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cartRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/cart_ar_row"
+        android:orientation="horizontal"
+        />
 
     <ImageButton
         android:id="@+id/downBtn"

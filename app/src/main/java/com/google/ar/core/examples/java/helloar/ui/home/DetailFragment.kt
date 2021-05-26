@@ -3,15 +3,14 @@ package com.google.ar.core.examples.java.helloar.ui.home
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -70,8 +69,8 @@ class DetailFragment : Fragment() {
             findNavController().navigate(action)
             //Load image to Bitmap
             lifecycleScope.launch{
-                val bitmapData = getBitmap(data.imgURL)
-                PlaceholderContent.setImageBitmap(bitmapData)
+                //PlaceholderContent.bitmap = getBitmap(data.imgURL)
+                PlaceholderContent.bitmap =(detail_imageView.getDrawable() as BitmapDrawable).bitmap
             }
         }
 

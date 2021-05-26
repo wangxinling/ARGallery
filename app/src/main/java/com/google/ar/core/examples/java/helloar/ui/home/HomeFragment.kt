@@ -21,8 +21,8 @@ class HomeFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?,
     ): View? {
-        val bitmapData = BitmapFactory.decodeResource(resources,R.drawable.daisy)
-        PlaceholderContent.setImageBitmap(bitmapData)
+//        var bitmapData = BitmapFactory.decodeResource(resources,R.drawable.daisy)
+//        PlaceholderContent.bitmap =bitmapData
 
         homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
